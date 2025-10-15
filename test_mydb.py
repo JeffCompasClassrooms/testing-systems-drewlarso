@@ -1,5 +1,4 @@
 from mydb import MyDB
-import unittest
 import pytest
 import os
 
@@ -9,6 +8,34 @@ def db():
     db = MyDB("testing.db")
     yield db
     os.remove("testing.db")
+
+
+def describe_constructor():
+
+    def test_db_creates_file_if_doesnt_exist():
+        if os.path.exists("test.db"):
+            os.remove("test.db")
+
+        assert not os.path.exists("test.db")
+
+        db = MyDB("test.db")
+
+        assert os.path.exists("test.db")
+
+        os.remove("test.db")
+
+    def test_db_does_nothing_if_file_exists():
+        if not os.path.exists("test.db"):
+            with open("test.db", 'wb') as f:
+                f.write(b"hello world")
+
+        assert os.path.exists("test.db")
+
+        db = MyDB("test.db")
+
+        assert os.path.exists("test.db")
+
+        os.remove("test.db")
 
 
 def describe_load_strings():
