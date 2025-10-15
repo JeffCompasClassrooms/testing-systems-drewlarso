@@ -3,6 +3,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
 from squirrel_db import SquirrelDB
 
+
 class SquirrelServerHandler(BaseHTTPRequestHandler):
 
     # HTTP METHODS
@@ -122,12 +123,13 @@ class SquirrelServerHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(bytes("404 Not Found", "utf-8"))
 
+
 def run():
     print("squirrel_server running at 127.0.0.1:8080")
     listen = ("127.0.0.1", 8080)
     server = HTTPServer(listen, SquirrelServerHandler)
     server.serve_forever()
 
+
 if __name__ == '__main__':
     run()
-
