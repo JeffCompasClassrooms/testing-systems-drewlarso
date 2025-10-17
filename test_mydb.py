@@ -97,6 +97,10 @@ def describe_save_string():
     def test_db_errors_when_load_strings_doesnt_return_an_array(db):
         db.saveStrings("not an array")
 
+        # If we call saveStrings on something that isnt an array, it works
+        # If we try to call saveString, it freaks out
+        # saveString assumes we have an array and does no checks
+
         with pytest.raises(AttributeError):
             db.saveString("python")
 
