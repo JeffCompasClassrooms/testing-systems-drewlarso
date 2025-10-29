@@ -17,7 +17,7 @@ def database():
 
 @pytest.fixture
 def server():
-    listen = ("127.0.0.1", 8080)
+    listen = ("127.0.0.1", 8081)
     server = HTTPServer(listen, SquirrelServerHandler)
     server_thread = threading.Thread(target=server.serve_forever)
     server_thread.daemon = True
@@ -169,14 +169,10 @@ def describe_handle_squirrels_create():
         response = requests.post(url, billy)
         assert response.status_code == 201
 
-    # def it_errors_when_creating_squirrel_with_invalid_data(server):
-    #     url = f"{server}/squirrels"
-    #     billy = {
-    #         "title": "billy",
-    #         "dimensions": "mini",
-    #     }
-    #     response = requests.post(url, billy)
-    #     assert response.status_code == 400
+    def it_returns_404_when_creating_squirrel_at_invalid_address(server):
+        url = f"{server}/squirrels/123"
+        response = requests.post(url, {})
+        assert response.status_code == 404
 
     def it_can_retrieve_squirrel_after_creating_it(server):
         create_url = f"{server}/squirrels"
@@ -244,6 +240,11 @@ def describe_handle_squirrels_update():
         response = requests.put(update_url, billy)
         assert response.status_code == 404
 
+    def it_returns_404_when_updating_invalid_address(server):
+        update_url = f"{server}/squirrels"
+        response = requests.put(update_url, {})
+        assert response.status_code == 404
+
 
 def describe_handle_squirrels_delete():
     def it_deletes_valid_squirrel(server):
@@ -263,3 +264,87 @@ def describe_handle_squirrels_delete():
         delete_url = f"{server}/squirrels/1"
         response = requests.delete(delete_url)
         assert response.status_code == 404
+
+    def it_returns_404_when_deleting_invalid_address(server):
+        delete_url = f"{server}/squirrels"
+        response = requests.delete(delete_url)
+        assert response.status_code == 404
+
+
+def describe_handle_edge_cases():
+    def it_returns_404_when_retrieving_at_unknown_address(server):
+        url = f"{server}/chipmunks"
+        response = requests.get(url)
+        assert response.status_code == 404
+
+    def it_returns_404_when_retrieving_at_base_address(server):
+        url = f"{server}/"
+        response = requests.get(url)
+        assert response.status_code == 404
+
+    def it_returns_404_when_retrieving_at_non_number_address(server):
+        url = f"{server}/squirrels/abc"
+        response = requests.get(url)
+        assert response.status_code == 404
+
+    def it_cant_get_squirrel_after_deleting_it(server):
+        create_url = f"{server}/squirrels"
+        delete_url = f"{server}/squirrels/1"
+        billy = {
+            "name": "billy",
+            "size": "mini",
+        }
+        response = requests.post(create_url, billy)
+        assert response.status_code == 201
+        response = requests.delete(delete_url)
+        assert response.status_code == 204
+        response = requests.get(delete_url)
+        assert response.status_code == 404
+
+    def it_cant_update_squirrel_after_deleting_it(server):
+        create_url = f"{server}/squirrels"
+        delete_url = f"{server}/squirrels/1"
+        billy = {
+            "name": "billy",
+            "size": "mini",
+        }
+        response = requests.post(create_url, billy)
+        assert response.status_code == 201
+        response = requests.delete(delete_url)
+        assert response.status_code == 204
+        response = requests.put(delete_url, billy)
+        assert response.status_code == 404
+
+    def it_cant_delete_squirrel_multiple_times(server):
+        create_url = f"{server}/squirrels"
+        delete_url = f"{server}/squirrels/1"
+        billy = {
+            "name": "billy",
+            "size": "mini",
+        }
+        response = requests.post(create_url, billy)
+        assert response.status_code == 201
+        response = requests.delete(delete_url)
+        assert response.status_code == 204
+        response = requests.delete(delete_url)
+        assert response.status_code == 404
+
+    def it_reuses_id_after_deleting(server):
+        create_url = f"{server}/squirrels"
+        delete_url = f"{server}/squirrels/1"
+        billy = {
+            "name": "billy",
+            "size": "mini",
+        }
+        response = requests.post(create_url, billy)
+        assert response.status_code == 201
+        response = requests.get(delete_url)
+        assert response.status_code == 200
+        response = requests.delete(delete_url)
+        assert response.status_code == 204
+        response = requests.get(delete_url)
+        assert response.status_code == 404
+        response = requests.post(create_url, billy)
+        assert response.status_code == 201
+        response = requests.get(delete_url)
+        assert response.status_code == 200

@@ -1,9 +1,18 @@
 # Squirrel Server
 
 ============================= test session starts ==============================
-collected 12 items
+collected 22 items
 
 test_squirrel_server.py:
+
+Handle edge cases:
+✓ It returns 404 when retrieving at unknown address
+✓ It returns 404 when retrieving at base address
+✓ It returns 404 when retrieving at non number address
+✓ It cant get squirrel after deleting it
+✓ It cant update squirrel after deleting it
+✓ It cant delete squirrel multiple times
+✓ It reuses id after deleting
 
 Handle squirrel index:
 ✓ It gets empty list
@@ -12,11 +21,13 @@ Handle squirrel index:
 
 Handle squirrels create:
 ✓ It creates squirrel with valid data
+✓ It returns 404 when creating squirrel at invalid address
 ✓ It can retrieve squirrel after creating it
 
 Handle squirrels delete:
 ✓ It deletes valid squirrel
 ✓ It returns 404 when deleting invalid squirrel
+✓ It returns 404 when deleting invalid address
 
 Handle squirrels retrieve:
 ✓ It gets valid squirrel from list of one
@@ -26,8 +37,9 @@ Handle squirrels retrieve:
 Handle squirrels update:
 ✓ It updates valid squirrel with valid data
 ✓ It returns 404 when updating invalid squirrel
+✓ It returns 404 when updating invalid address
 
-============================== 12 passed in 6.32s ==============================
+============================= 22 passed in 11.41s ==============================
 
 # MyDB
 
