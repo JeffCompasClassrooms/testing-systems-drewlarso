@@ -1,5 +1,4 @@
 ============================= test session starts ==============================
-
 collected 22 items
 
 test_squirrel_server.py:
