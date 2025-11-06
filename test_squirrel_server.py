@@ -174,6 +174,11 @@ def describe_handle_squirrels_create():
         response = requests.post(url, {})
         assert response.status_code == 404
 
+    def it_returns_404_when_creating_squirrel_at_bad_path(server):
+        url = f"{server}/chipmunks"
+        response = requests.post(url, {})
+        assert response.status_code == 404
+
     def it_can_retrieve_squirrel_after_creating_it(server):
         create_url = f"{server}/squirrels"
         get_url = f"{server}/squirrels/1"
@@ -245,6 +250,11 @@ def describe_handle_squirrels_update():
         response = requests.put(update_url, {})
         assert response.status_code == 404
 
+    def it_returns_404_when_updating_squirrel_at_bad_path(server):
+        url = f"{server}/chipmunks"
+        response = requests.put(url, {})
+        assert response.status_code == 404
+
 
 def describe_handle_squirrels_delete():
     def it_deletes_valid_squirrel(server):
@@ -268,6 +278,11 @@ def describe_handle_squirrels_delete():
     def it_returns_404_when_deleting_invalid_address(server):
         delete_url = f"{server}/squirrels"
         response = requests.delete(delete_url)
+        assert response.status_code == 404
+
+    def it_returns_404_when_deleting_squirrel_at_bad_path(server):
+        url = f"{server}/chipmunks"
+        response = requests.delete(url)
         assert response.status_code == 404
 
 
