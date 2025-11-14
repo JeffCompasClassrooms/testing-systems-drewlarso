@@ -219,20 +219,20 @@ def describe_handle_squirrels_update():
             "size": "pudgy",
         }
 
-    # def it_returns_404_when_updating_valid_squirrel_with_invalid_data(server):
-    #     create_url = f"{server}/squirrels"
-    #     update_url = f"{server}/squirrels/1"
-    #     billy = {
-    #         "name": "billy",
-    #         "size": "mini",
-    #     }
-    #     billy_v2 = {
-    #         "title": "billy",
-    #         "dimensions": "pudgy",
-    #     }
-    #     requests.post(create_url, billy)
-    #     response = requests.put(update_url, billy_v2)
-    #     assert response.status_code == 400
+    def it_returns_404_when_updating_valid_squirrel_with_invalid_data(server):
+        create_url = f"{server}/squirrels"
+        update_url = f"{server}/squirrels/1"
+        billy = {
+            "name": "billy",
+            "size": "mini",
+        }
+        billy_v2 = {
+            "title": "billy",
+            "dimensions": "pudgy",
+        }
+        requests.post(create_url, billy)
+        response = requests.put(update_url, billy_v2)
+        assert response.status_code == 400
 
     def it_returns_404_when_updating_invalid_squirrel(server):
         create_url = f"{server}/squirrels"
